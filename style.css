@@ -290,8 +290,8 @@ img {
 }
 
 [data-theme="dark"] .nav-logo-img {
-  mix-blend-mode: screen;
-  filter: contrast(1.25) brightness(1.2);
+  mix-blend-mode: lighten;
+  filter: contrast(1.2) brightness(1.15);
 }
 
 .nav-logo-img:hover {
