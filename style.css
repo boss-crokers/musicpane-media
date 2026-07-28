@@ -284,18 +284,16 @@ img {
   height: 48px;
   width: auto;
   object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: contrast(1.1) brightness(0.92);
+  filter: brightness(0.15) contrast(1.2);
   transition: all 0.5s ease;
 }
 
 [data-theme="dark"] .nav-logo-img {
-  mix-blend-mode: lighten;
-  filter: contrast(1.2) brightness(1.15);
+  filter: brightness(1.05) contrast(1.1);
 }
 
 .nav-logo-img:hover {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .nav-links {
