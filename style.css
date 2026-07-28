@@ -18,6 +18,19 @@
   border: 0;
 }
 
+/* Keyboard focus. The custom cursor hides the pointer, so this is the only
+   positional feedback a keyboard user gets — it has to be unmissable. */
+:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.project-card:focus-visible,
+.contact-email:focus-visible {
+  outline-offset: 8px;
+}
+
 /* Hide default scrollbar so the custom draggable chain rail takes over */
 html {
   scrollbar-width: none; /* Firefox */

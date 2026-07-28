@@ -410,11 +410,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalSuccessContent = document.getElementById('modal-success-content');
     const closeSuccessBtn = document.getElementById('close-success-btn');
 
+    let previousActiveElement = null;
+
     function openModal() {
         if (quoteModal) {
+            previousActiveElement = document.activeElement;
             quoteModal.classList.add('active');
             quoteModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            
+            // Focus the close button or first input inside the modal
+            const closeBtn = quoteModal.querySelector('#close-quote-modal');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
         }
     }
 
@@ -423,6 +432,12 @@ document.addEventListener('DOMContentLoaded', () => {
             quoteModal.classList.remove('active');
             quoteModal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
+            
+            // Restore focus
+            if (previousActiveElement) {
+                previousActiveElement.focus();
+            }
+            
             setTimeout(() => {
                 if (modalBodyContent && modalSuccessContent) {
                     modalBodyContent.style.display = 'block';
@@ -439,11 +454,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
     if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', closeModal);
 
+    // Keyboard controls for modal (Escape to close, Tab to trap focus)
     window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && quoteModal && quoteModal.classList.contains('active')) {
             closeModal();
         }
     });
+
+    if (quoteModal) {
+        quoteModal.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && quoteModal.classList.contains('active')) {
+                const focusableElements = quoteModal.querySelectorAll('button, input, select, textarea');
+                // Filter to only visible elements so hidden state elements aren't tabbed into
+                const visibleElements = Array.from(focusableElements).filter(el => {
+                    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+                });
+
+                if (visibleElements.length === 0) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const firstEl = visibleElements[0];
+                const lastEl = visibleElements[visibleElements.length - 1];
+
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstEl) {
+                        lastEl.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastEl) {
+                        firstEl.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
+    }
 
     if (quoteForm) {
         quoteForm.addEventListener('submit', async (e) => {
