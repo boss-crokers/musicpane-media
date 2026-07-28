@@ -214,11 +214,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (quoteForm) {
-        quoteForm.addEventListener('submit', (e) => {
+        quoteForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (modalBodyContent && modalSuccessContent) {
-                modalBodyContent.style.display = 'none';
-                modalSuccessContent.style.display = 'block';
+            const submitBtn = quoteForm.querySelector('.submit-quote-btn');
+            const originalBtnHtml = submitBtn.innerHTML;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>Sending...</span>';
+
+            const formData = new FormData(quoteForm);
+            
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (modalBodyContent && modalSuccessContent) {
+                        modalBodyContent.style.display = 'none';
+                        modalSuccessContent.style.display = 'block';
+                    }
+                } else {
+                    alert('Submission error: ' + (result.message || 'Please try again.'));
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Network error. Please check your connection and try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnHtml;
             }
         });
     }
