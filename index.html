@@ -79,6 +79,12 @@
       <div class="blob blob-3"></div>
     </div>
 
+    <!-- Chain scroll indicator (replaces the native scrollbar) -->
+    <div class="chain-rail" aria-hidden="true">
+      <div class="chain-rail-ghost"></div>
+      <div class="chain-rail-fill"></div>
+    </div>
+
     <nav class="navbar">
       <div class="nav-container">
         <a href="#home" class="nav-logo">MUSICPANE MEDIA</a>
@@ -110,12 +116,15 @@
     <main id="app">
       <section id="home" class="hero">
         <div class="hero-content">
-          <div class="hero-title" id="hero-coin">
-            <div class="coin-inner">
-              <div class="coin-front">-p.b-</div>
-              <div class="coin-back"><img src="/images/pb-avatar.jpg" alt="Pete Avatar"></div>
-            </div>
-          </div>
+          <h1 class="hero-title">
+            <span class="visually-hidden">MusicPane Media — web design and social media management in New York</span>
+            <button type="button" class="coin-flip" id="hero-coin" aria-pressed="false" aria-label="Flip the p.b monogram to show Pete's photo">
+              <span class="coin-inner">
+                <span class="coin-front wm-preload" id="hero-wordmark" aria-hidden="true"><span class="wm-char">-</span><span class="wm-char">p</span><span class="wm-char">.</span><span class="wm-char">b</span><span class="wm-char">-</span></span>
+                <span class="coin-back"><img src="/images/pb-avatar.jpg" alt="Pete Brancazio" decoding="async"></span>
+              </span>
+            </button>
+          </h1>
           <p class="hero-subtitle">Top-tier websites and active social channels at a sensible price. We build the platform and grow the audience.</p>
           <div class="hero-cta-wrapper">
             <button id="hero-quote-btn" class="hero-cta-btn magnetic-nav">START A PROJECT &rarr;</button>
