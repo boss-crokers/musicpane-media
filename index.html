@@ -4,7 +4,25 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/images/chain.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#EAE8E2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0A0A0D" media="(prefers-color-scheme: dark)" />
     <title>MusicPane Media | Web Design & Social Media Management in New York</title>
+
+    <!-- Resolve the theme before first paint so dark-mode visitors never see a light flash.
+         Must stay inline and blocking; main.js only owns the toggle after this point. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && prefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {
+          /* private mode / blocked storage: fall through to the light default */
+        }
+      })();
+    </script>
     <meta name="description" content="MusicPane Media builds top-tier custom websites and manages active social media channels for New York businesses at a sensible price. We build the platform and grow your audience." />
     <meta name="keywords" content="MusicPane Media, Web Design New York, Social Media Management, Custom Websites, Long Island Web Development, Instagram Management, Affordable Web Design" />
     <meta name="author" content="MusicPane Media" />
@@ -42,6 +60,7 @@
         "addressCountry": "US"
       },
       "priceRange": "$$",
+      "email": "hello@musicpanemedia.com",
       "sameAs": [
         "https://www.instagram.com/boss_crokers_wantagh/",
         "https://www.instagram.com/squareone_inspectors/",
@@ -69,15 +88,21 @@
       <div class="blob blob-3"></div>
     </div>
 
+    <!-- Chain scroll indicator (replaces the native scrollbar) -->
+    <div class="chain-rail" aria-hidden="true">
+      <div class="chain-rail-ghost"></div>
+      <div class="chain-rail-fill"></div>
+    </div>
+
     <nav class="navbar">
       <div class="nav-container">
-        <a href="#home" class="nav-logo">MUSICPANE MEDIA</a>
+        <a href="#home" class="nav-logo magnetic-nav">MUSICPANE MEDIA</a>
         <div class="nav-links">
-          <a href="#home">HOME</a>
-          <a href="#work">WORK</a>
-          <a href="#about">ABOUT</a>
-          <a href="#contact">CONTACT</a>
-          <button id="theme-toggle" class="theme-toggle-btn magnetic-nav" aria-label="Toggle Dark/Light Mode">
+          <a href="#home" class="magnetic-nav">HOME</a>
+          <a href="#work" class="magnetic-nav">WORK</a>
+          <a href="#about" class="magnetic-nav">ABOUT</a>
+          <a href="#contact" class="magnetic-nav">CONTACT</a>
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Dark/Light Mode">
             <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="5"></circle>
               <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -99,12 +124,15 @@
     <main id="app">
       <section id="home" class="hero">
         <div class="hero-content">
-          <div class="hero-title" id="hero-coin">
-            <div class="coin-inner">
-              <div class="coin-front">-p.b-</div>
-              <div class="coin-back"><img src="/images/pb-avatar.jpg" alt="Pete Avatar"></div>
-            </div>
-          </div>
+          <h1 class="hero-title">
+            <span class="visually-hidden">MusicPane Media — web design and social media management in New York</span>
+            <button type="button" class="coin-flip" id="hero-coin" aria-pressed="false" aria-label="Flip the p.b monogram to show Pete's photo">
+              <span class="coin-inner">
+                <span class="coin-front wm-preload" id="hero-wordmark" aria-hidden="true"><span class="wm-char">-</span><span class="wm-char">p</span><span class="wm-char">.</span><span class="wm-char">b</span><span class="wm-char">-</span></span>
+                <span class="coin-back"><img src="/images/pb-avatar.jpg" alt="Pete Brancazio" decoding="async"></span>
+              </span>
+            </button>
+          </h1>
           <p class="hero-subtitle">Top-tier websites and active social channels at a sensible price. We build the platform and grow the audience.</p>
         </div>
       </section>
@@ -114,53 +142,55 @@
         
         <!-- Filter Tabs -->
         <div class="work-filter-bar">
-          <button class="filter-btn active" data-filter="all">ALL WORK</button>
-          <button class="filter-btn" data-filter="websites">WEBSITE BUILDS (6)</button>
-          <button class="filter-btn" data-filter="social">SOCIAL MEDIA PAGES (4)</button>
+          <!-- Counts in the labels are filled in from the DOM by main.js, so they
+               cannot drift as work is added or removed. -->
+          <button class="filter-btn active" data-filter="all" data-label="ALL WORK" aria-pressed="true">ALL WORK</button>
+          <button class="filter-btn" data-filter="websites" data-label="WEBSITE BUILDS" aria-pressed="false">WEBSITE BUILDS</button>
+          <button class="filter-btn" data-filter="social" data-label="SOCIAL MEDIA PAGES" aria-pressed="false">SOCIAL MEDIA PAGES</button>
         </div>
 
         <!-- Section 1: Websites -->
         <div class="work-subsection" data-category="websites">
           <h2 class="section-title">WEBSITE BUILDS</h2>
           <div class="projects-grid">
-            <a href="https://www.bosscrokers.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://www.bosscrokers.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/boss-crokers-site.jpg" alt="Boss Croker's Website" class="screenshot-img">
+                <img src="/images/boss-crokers-site.jpg" alt="Boss Croker's Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Boss Croker's</h3>
               <p class="project-category">WEBSITE BUILD</p>
             </a>
-            <a href="https://squareonehomeinspectors.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://squareonehomeinspectors.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/square-one-site.jpg" alt="Square One Website" class="screenshot-img">
+                <img src="/images/square-one-site.jpg" alt="Square One Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Square One</h3>
               <p class="project-category">WEBSITE BUILD</p>
             </a>
-            <a href="https://riobravo1959.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://riobravo1959.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/rio-bravo-site.jpg" alt="Rio Bravo Tribute Website" class="screenshot-img">
+                <img src="/images/rio-bravo-site.jpg" alt="Rio Bravo Tribute Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Rio Bravo Tribute</h3>
               <p class="project-category">WEBSITE BUILD</p>
             </a>
-            <a href="https://cadprivateinvestigations.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://cadprivateinvestigations.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/cad-pi-site.jpg" alt="CAD Private Investigations Website" class="screenshot-img">
+                <img src="/images/cad-pi-site.jpg" alt="CAD Private Investigations Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">CAD Private Investigations</h3>
               <p class="project-category">WEBSITE BUILD</p>
             </a>
-            <a href="https://www.turfkinglawns.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://www.turfkinglawns.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/turf-king-site.jpg" alt="Turf King Lawns Website" class="screenshot-img">
+                <img src="/images/turf-king-site.jpg" alt="Turf King Lawns Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Turf King Lawns</h3>
               <p class="project-category">WEBSITE BUILD</p>
             </a>
-            <a href="https://neutraloverdrive.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
+            <a href="https://neutraloverdrive.com/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="websites">
               <div class="project-image">
-                <img src="/images/neutral-overdrive-site.jpg" alt="Neutral Overdrive Website" class="screenshot-img">
+                <img src="/images/neutral-overdrive-site.jpg" alt="Neutral Overdrive Website" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Neutral Overdrive</h3>
               <p class="project-category">WEBSITE BUILD</p>
@@ -172,30 +202,30 @@
         <div class="work-subsection" data-category="social" style="margin-top: 80px;">
           <h2 class="section-title">SOCIAL MEDIA</h2>
           <div class="projects-grid">
-            <a href="https://www.instagram.com/boss_crokers_wantagh/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
+            <a href="https://www.instagram.com/boss_crokers_wantagh/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="social">
               <div class="project-image">
-                <img src="/images/boss-crokers-logo.jpg" alt="Boss Croker's Instagram Page" class="screenshot-img">
+                <img src="/images/boss-crokers-logo.jpg" alt="Boss Croker's Instagram Page" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">Boss Croker's Wantagh</h3>
               <p class="project-category">INSTAGRAM PAGE</p>
             </a>
-            <a href="https://www.instagram.com/squareone_inspectors/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
+            <a href="https://www.instagram.com/squareone_inspectors/" target="_blank" rel="noopener noreferrer" class="project-card" data-type="social">
               <div class="project-image">
-                <img src="/images/square-one-logo-new.png" alt="Square One Inspectors Instagram Page" class="screenshot-img logo-fit">
+                <img src="/images/square-one-logo-new.png" alt="Square One Inspectors Instagram Page" loading="lazy" decoding="async" class="screenshot-img logo-fit">
               </div>
               <h3 class="project-title">Square One Inspectors</h3>
               <p class="project-category">INSTAGRAM PAGE</p>
             </a>
-            <a href="https://www.instagram.com/gopalmtrees" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
+            <a href="https://www.instagram.com/gopalmtrees" target="_blank" rel="noopener noreferrer" class="project-card" data-type="social">
               <div class="project-image">
-                <img src="/images/go-palm-trees-logo.jpg" alt="GO Palm Trees Instagram Page" class="screenshot-img">
+                <img src="/images/go-palm-trees-logo.jpg" alt="GO Palm Trees Instagram Page" loading="lazy" decoding="async" class="screenshot-img">
               </div>
               <h3 class="project-title">GO Palm Trees</h3>
               <p class="project-category">INSTAGRAM PAGE</p>
             </a>
-            <a href="https://www.instagram.com/reliableridesli" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
+            <a href="https://www.instagram.com/reliableridesli" target="_blank" rel="noopener noreferrer" class="project-card" data-type="social">
               <div class="project-image">
-                <img src="/images/reliable-rides-logo.jpg" alt="Reliable Rides LI Instagram Page" class="screenshot-img logo-fit">
+                <img src="/images/reliable-rides-logo.jpg" alt="Reliable Rides LI Instagram Page" loading="lazy" decoding="async" class="screenshot-img logo-fit">
               </div>
               <h3 class="project-title">Reliable Rides LI</h3>
               <p class="project-category">INSTAGRAM PAGE</p>
@@ -224,7 +254,7 @@
 
         <div class="services-section">
           <h2 class="section-title">CORE SERVICES & CAPABILITIES</h2>
-          <div class="services-grid">
+          <div class="services-grid chain-divider">
             <div class="service-card">
               <h3 class="service-title">Web Development</h3>
               <p class="service-desc">Custom builds, React single-page applications, and seamless domain/hosting migrations.</p>
@@ -246,7 +276,16 @@
         <div class="quote-block">
           <h2 class="quote-text">"Design is not just what it looks like, design is how it works."</h2>
         </div>
-        <footer class="footer">
+
+        <!-- TODO(pete): confirm this address — it is a placeholder and is also
+             referenced in the JSON-LD block in <head>. -->
+        <div class="contact-cta">
+          <p class="contact-lead">Have a project in mind?</p>
+          <a class="contact-email" href="mailto:hello@musicpanemedia.com?subject=Project%20inquiry">hello@musicpanemedia.com</a>
+          <p class="contact-note">Based in New York. Websites, social channels, and everything in between.</p>
+        </div>
+
+        <footer class="footer chain-divider">
           <div class="footer-links">
             <a href="https://www.instagram.com/boss_crokers_wantagh/?hl=en" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
             <a href="https://www.linkedin.com/in/pbrancazio/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>

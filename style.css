@@ -5,23 +5,93 @@
   box-sizing: border-box;
 }
 
-/* Realistic Chain Scrollbar */
-::-webkit-scrollbar {
-  width: 24px;
+/* Realistic Chain Scrollbar — a fixed chain that is revealed link by link
+   as you scroll. The links never translate; only the reveal window grows. */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
-::-webkit-scrollbar-thumb {
+/* Wider than the 24px chain art so the revealed chain has room to sway
+   sideways without ever spilling past the viewport edge. */
+.chain-rail {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 100vh;
+  z-index: 200;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.chain-rail-ghost,
+.chain-rail-fill {
+  position: absolute;
+  inset: 0;
   background-image: url('/images/chain.svg');
-  background-size: 100% auto;
-  background-position: top center;
+  background-size: 24px 50px;
   background-repeat: repeat-y;
+  background-position: top center;
+}
+
+/* Faint impression of the chain that has not been revealed yet */
+.chain-rail-ghost {
+  opacity: 0.06;
+}
+
+[data-theme="dark"] .chain-rail-ghost {
+  opacity: 0.1;
+}
+
+/* The revealed length of chain. --chain-hidden goes 100% -> 0% as you scroll,
+   with the leading link feathering out so the chain never looks severed. */
+.chain-rail-fill {
+  --chain-hidden: 100%;
+  --chain-edge: calc(100% - var(--chain-hidden));
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--chain-edge),
+    transparent calc(var(--chain-edge) + 28px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 var(--chain-edge),
+    transparent calc(var(--chain-edge) + 28px)
+  );
+  will-change: mask-image, transform;
+  /* Sway is driven from JS; the chain hangs from the top, so it leans from there */
+  transform-origin: top center;
+  transform: skewX(var(--chain-sway, 0deg)) translateX(var(--chain-drift, 0px));
+}
+
+.chain-rail.is-dragging {
+  cursor: grabbing;
+}
+
+@media (max-width: 768px) {
+  .chain-rail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chain-rail-fill {
+    transition: none;
+  }
 }
 
 :root {
+  color-scheme: light;
+
   /* Light Theme (Default) */
   --color-bg: #EAE8E2;
   --color-text-primary: #1C1C1C;
@@ -35,6 +105,7 @@
   --blob-opacity: 0.4;
   --noise-opacity: 0.05;
   --nav-bg: rgba(234, 232, 226, 0.85);
+  --chain-divider-opacity: 0.4;
   
   /* Typography */
   --font-serif: 'Amiri', serif;
@@ -50,6 +121,8 @@
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
+
   /* Sleek Obsidian Dark Theme */
   --color-bg: #0A0A0D;
   --color-text-primary: #F0F0F4;
@@ -63,6 +136,7 @@
   --blob-opacity: 0.18;
   --noise-opacity: 0.07;
   --nav-bg: rgba(10, 10, 13, 0.85);
+  --chain-divider-opacity: 0.55;
 }
 
 body {
@@ -72,8 +146,76 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: none; /* Hide default cursor */
-  transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+  transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Anchor targets clear the fixed navbar instead of landing under it */
+#home,
+#work,
+#about,
+#contact {
+  scroll-margin-top: 120px;
+}
+
+/* Keyboard focus. The custom cursor hides the pointer, so this is the only
+   positional feedback a keyboard user gets — it has to be unmissable. */
+:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.project-card:focus-visible,
+.contact-email:focus-visible {
+  outline-offset: 8px;
+}
+
+/* Screen-reader-only text */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Theme switch as a circular sweep out of the toggle button.
+   Falls back to the plain colour crossfade wherever View Transitions are
+   unsupported, or when the visitor prefers reduced motion. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.theme-sweeping::view-transition-old(root) {
+  z-index: 1;
+}
+
+html.theme-sweeping::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-sweep 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes theme-sweep {
+  from {
+    clip-path: circle(0px at var(--sweep-x) var(--sweep-y));
+  }
+  to {
+    clip-path: circle(var(--sweep-r) at var(--sweep-x) var(--sweep-y));
+  }
+}
+
+/* The body's own colour transition would run underneath the sweep and muddy
+   it, so the incoming snapshot is painted at its final colour immediately. */
+html.theme-sweeping body,
+html.theme-sweeping .footer-section {
+  transition: none;
 }
 
 /* Theme Toggle Button */
@@ -138,8 +280,8 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 /* Custom Cursor */
@@ -291,10 +433,30 @@ img {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 1px;
+  position: relative;
 }
 
 .nav-links a:hover {
   opacity: 0.6;
+}
+
+/* Scroll-spy underline: marks the section currently in view */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-links a:hover::after,
+.nav-links a.is-active::after {
+  transform: scaleX(1);
 }
 
 @media (max-width: 768px) {
@@ -303,6 +465,12 @@ img {
   }
   .navbar {
     padding: 16px var(--padding-x);
+  }
+  #home,
+  #work,
+  #about,
+  #contact {
+    scroll-margin-top: 88px;
   }
   .nav-logo {
     font-size: 18px;
@@ -344,23 +512,50 @@ img {
   font-weight: 400;
   margin-bottom: 24px;
   letter-spacing: -2px;
+  display: block;
+  /* Perspective lives here, not on the button: WebKit is unreliable about
+     hosting 3D context and flex layout inside a <button>. */
   perspective: 1000px;
-  cursor: pointer;
+}
+
+/* The monogram is a real button so it is reachable and operable by keyboard.
+   It stays a plain inline-block — all layout happens on the spans inside. */
+.coin-flip {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
   display: inline-block;
+  cursor: pointer;
+}
+
+/* One-time nudge after the wordmark settles, hinting that the mark flips */
+@keyframes coin-hint {
+  0%, 100% { transform: rotateY(0deg); }
+  45% { transform: rotateY(-22deg); }
+}
+
+.coin-flip.hinting .coin-inner {
+  animation: coin-hint 1.4s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .coin-inner {
   position: relative;
-  width: 100%;
+  /* Content-sized rather than a percentage of the button: a percentage against a
+     shrink-to-fit parent is the kind of circular sizing engines disagree on. */
+  width: auto;
   height: 1.1em;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
 }
 
-.hero-title.flipped .coin-inner {
+.coin-flip.flipped .coin-inner {
   transform: rotateY(180deg);
 }
 
@@ -370,9 +565,25 @@ img {
   height: 100%;
   backface-visibility: hidden;
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+}
+
+/* Wordmark separation on load: characters start stacked on top of one
+   another in the middle and spread out to their natural positions. */
+/* Each character must never wrap, shrink, or claim its own line, whatever the
+   engine decides about the flex container around it. */
+.wm-char {
+  display: inline-block;
+  flex: 0 0 auto;
+  white-space: pre;
+  will-change: transform, filter;
+}
+
+.coin-front.wm-preload {
+  opacity: 0;
 }
 
 .coin-back {
@@ -473,6 +684,7 @@ img {
 }
 
 .project-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
@@ -503,11 +715,49 @@ img {
   transform: scale(1.04);
 }
 
+/* Every card opens in a new tab — say so on hover instead of leaving it a surprise */
+.project-image::after {
+  content: '↗';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1;
+  color: #FFFFFF;
+  background-color: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transform: translateY(-4px) scale(0.9);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card:hover .project-image::after,
+.project-card:focus-visible .project-image::after {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 .project-title {
   font-family: var(--font-serif);
   font-size: 32px;
   font-weight: 400;
   margin-bottom: 8px;
+  /* font-style is not animatable, so the nudge carries the swap */
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Uses the Amiri italic 400 face that the font request already pays for */
+.project-card:hover .project-title,
+.project-card:focus-visible .project-title {
+  font-style: italic;
+  transform: translateX(6px);
 }
 
 .project-category {
@@ -607,13 +857,37 @@ img {
   margin-top: 80px;
 }
 
+/* Chain divider: the same links from the scroll rail, laid on their side, so the
+   motif runs through the page instead of only down the right edge.
+   Absolutely positioned, so it never becomes a grid or flex item. */
+.chain-divider {
+  position: relative;
+}
+
+.chain-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  /* Smaller links than the scroll rail so this reads as an ornament, not a bar */
+  background-image: url('/images/chain-h.svg');
+  background-size: 34px 16px;
+  background-repeat: repeat-x;
+  background-position: left center;
+  opacity: var(--chain-divider-opacity);
+  pointer-events: none;
+  /* Ends fade out instead of colliding with the edge of the content column */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+}
+
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
-  border-top: 1px solid var(--border-color);
-  padding-top: 40px;
-  transition: border-color 0.5s ease;
+  padding-top: 64px;
 }
 
 .service-card {
@@ -639,6 +913,13 @@ img {
   font-weight: 700;
   color: var(--color-text-primary);
   margin-bottom: 16px;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* And this uses the Amiri italic 700 face, so all four requested faces are live */
+.service-card:hover .service-title {
+  font-style: italic;
+  transform: translateX(4px);
 }
 
 .service-desc {
@@ -673,16 +954,97 @@ img {
   font-size: min(6vw, 64px);
   line-height: 1.2;
   font-weight: 400;
+  font-style: italic; /* Amiri italic 400 — the classic setting for a pull quote */
   color: var(--color-text-primary);
+}
+
+/* Word-by-word arrival, tipping up into place */
+.quote-text.quote-split {
+  perspective: 800px;
+}
+
+.quote-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.34em) rotateX(-38deg);
+  transform-origin: bottom center;
+  filter: blur(4px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s ease;
+  transition-delay: calc(var(--word-index, 0) * 55ms);
+}
+
+.quote-split.visible .quote-word {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg);
+  filter: blur(0px);
+}
+
+/* Contact CTA — the only place on the page that actually lets someone get in touch */
+.contact-cta {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 120px;
+}
+
+.contact-lead {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-text-secondary);
+  margin-bottom: 20px;
+}
+
+.contact-email {
+  font-family: var(--font-serif);
+  font-size: min(6vw, 52px);
+  line-height: 1.2;
+  color: var(--color-text-primary);
+  display: inline-block;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.contact-email::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-email:hover::after {
+  transform: scaleX(1);
+}
+
+.contact-note {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .contact-cta {
+    margin-bottom: 80px;
+  }
+  .contact-email {
+    font-size: 30px;
+  }
 }
 
 .footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 40px;
-  border-top: 1px solid var(--border-color);
-  transition: border-color 0.5s ease;
+  padding-top: 64px;
 }
 
 .footer-links {
@@ -722,10 +1084,43 @@ img {
   transform: translateY(0);
 }
 
-/* Stagger project cards */
-.project-card:nth-child(2).fade-up-element {
-  transition-delay: 0.1s;
+/* Stagger by column so every row animates in, not just the first three cards */
+.projects-grid .project-card:nth-child(3n + 2).fade-up-element,
+.service-card:nth-child(2).fade-up-element {
+  transition-delay: 0.09s;
 }
-.project-card:nth-child(3).fade-up-element {
-  transition-delay: 0.2s;
+
+.projects-grid .project-card:nth-child(3n + 3).fade-up-element,
+.service-card:nth-child(3).fade-up-element {
+  transition-delay: 0.18s;
+}
+
+/* Two-column breakpoint re-stripes the grid, so re-stripe the delays with it */
+@media (max-width: 1024px) {
+  .projects-grid .project-card.fade-up-element {
+    transition-delay: 0s;
+  }
+  .projects-grid .project-card:nth-child(2n + 2).fade-up-element {
+    transition-delay: 0.09s;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-grid .project-card.fade-up-element,
+  .projects-grid .project-card:nth-child(2n + 2).fade-up-element {
+    transition-delay: 0s;
+  }
+}
+
+/* Motion added for delight stays opt-out */
+@media (prefers-reduced-motion: reduce) {
+  .coin-flip.hinting .coin-inner {
+    animation: none;
+  }
+  .chain-rail-fill {
+    transform: none;
+  }
+  .blob {
+    animation: none;
+  }
 }
