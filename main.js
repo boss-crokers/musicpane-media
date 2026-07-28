@@ -166,5 +166,61 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Quote Modal Interactive Controller
+    const quoteModal = document.getElementById('quote-modal');
+    const openQuoteBtn = document.getElementById('open-quote-modal');
+    const heroQuoteBtn = document.getElementById('hero-quote-btn');
+    const closeQuoteBtn = document.getElementById('close-quote-modal');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const quoteForm = document.getElementById('quote-form');
+    const modalBodyContent = document.getElementById('modal-body-content');
+    const modalSuccessContent = document.getElementById('modal-success-content');
+    const closeSuccessBtn = document.getElementById('close-success-btn');
+
+    function openModal() {
+        if (quoteModal) {
+            quoteModal.classList.add('active');
+            quoteModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModal() {
+        if (quoteModal) {
+            quoteModal.classList.remove('active');
+            quoteModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                if (modalBodyContent && modalSuccessContent) {
+                    modalBodyContent.style.display = 'block';
+                    modalSuccessContent.style.display = 'none';
+                    if (quoteForm) quoteForm.reset();
+                }
+            }, 400);
+        }
+    }
+
+    if (openQuoteBtn) openQuoteBtn.addEventListener('click', openModal);
+    if (heroQuoteBtn) heroQuoteBtn.addEventListener('click', openModal);
+    if (closeQuoteBtn) closeQuoteBtn.addEventListener('click', closeModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
+    if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', closeModal);
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && quoteModal && quoteModal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    if (quoteForm) {
+        quoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (modalBodyContent && modalSuccessContent) {
+                modalBodyContent.style.display = 'none';
+                modalSuccessContent.style.display = 'block';
+            }
+        });
+    }
 });
 
