@@ -275,10 +275,27 @@ img {
 }
 
 .nav-logo {
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.nav-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.1) brightness(0.92);
+  transition: all 0.5s ease;
+}
+
+[data-theme="dark"] .nav-logo-img {
+  mix-blend-mode: screen;
+  filter: contrast(1.25) brightness(1.2);
+}
+
+.nav-logo-img:hover {
+  transform: scale(1.04);
 }
 
 .nav-links {
@@ -304,8 +321,8 @@ img {
   .navbar {
     padding: 16px var(--padding-x);
   }
-  .nav-logo {
-    font-size: 18px;
+  .nav-logo-img {
+    height: 36px;
   }
   .nav-links {
     display: flex;
