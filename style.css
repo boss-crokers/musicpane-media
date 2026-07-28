@@ -676,6 +676,15 @@ img {
   color: var(--color-text-primary);
 }
 
+.quote-author {
+  font-family: var(--font-sans);
+  font-size: min(3vw, 20px);
+  margin-top: 16px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;

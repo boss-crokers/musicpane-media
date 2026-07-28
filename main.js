@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     // Provide initial class to elements
-    const elementsToAnimate = document.querySelectorAll('.hero-title, .hero-subtitle, .project-card, .about-split, .experience-item, .quote-text');
+    const elementsToAnimate = document.querySelectorAll('.hero-title, .hero-subtitle, .project-card, .about-split, .experience-item, .quote-text, .quote-author');
     
     elementsToAnimate.forEach(el => {
         el.classList.add('fade-up-element');
