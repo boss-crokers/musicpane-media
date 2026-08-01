@@ -350,21 +350,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+    const isInitiallyDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+    if (isInitiallyDark) {
         rootEl.setAttribute('data-theme', 'dark');
     } else {
         rootEl.removeAttribute('data-theme');
     }
-
+    
     if (themeToggleBtn) {
+        themeToggleBtn.setAttribute('aria-pressed', String(isInitiallyDark));
+        
         themeToggleBtn.addEventListener('click', () => {
             const isDark = rootEl.getAttribute('data-theme') === 'dark';
             if (isDark) {
                 rootEl.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
+                themeToggleBtn.setAttribute('aria-pressed', 'false');
             } else {
                 rootEl.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
+                themeToggleBtn.setAttribute('aria-pressed', 'true');
             }
         });
     }
@@ -375,8 +380,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
+            filterButtons.forEach(b => {
+                b.classList.remove('active');
+                b.setAttribute('aria-pressed', 'false');
+            });
             btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
 
             const filterValue = btn.getAttribute('data-filter');
 
@@ -404,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const openQuoteBtn = document.getElementById('open-quote-modal');
     const heroQuoteBtn = document.getElementById('hero-quote-btn');
     const closeQuoteBtn = document.getElementById('close-quote-modal');
-    const modalBackdrop = document.getElementById('modal-backdrop');
     const quoteForm = document.getElementById('quote-form');
     const modalBodyContent = document.getElementById('modal-body-content');
     const modalSuccessContent = document.getElementById('modal-success-content');
@@ -415,8 +423,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModal() {
         if (quoteModal) {
             previousActiveElement = document.activeElement;
+            quoteModal.showModal();
             quoteModal.classList.add('active');
-            quoteModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
             
             // Focus the close button or first input inside the modal
@@ -430,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal() {
         if (quoteModal) {
             quoteModal.classList.remove('active');
-            quoteModal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
             
             // Restore focus
@@ -439,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             setTimeout(() => {
+                quoteModal.close();
                 if (modalBodyContent && modalSuccessContent) {
                     modalBodyContent.style.display = 'block';
                     modalSuccessContent.style.display = 'none';
@@ -451,45 +459,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openQuoteBtn) openQuoteBtn.addEventListener('click', openModal);
     if (heroQuoteBtn) heroQuoteBtn.addEventListener('click', openModal);
     if (closeQuoteBtn) closeQuoteBtn.addEventListener('click', closeModal);
-    if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
     if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', closeModal);
 
-    // Keyboard controls for modal (Escape to close, Tab to trap focus)
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && quoteModal && quoteModal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
+    // Close when clicking on dialog backdrop natively
     if (quoteModal) {
-        quoteModal.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && quoteModal.classList.contains('active')) {
-                const focusableElements = quoteModal.querySelectorAll('button, input, select, textarea');
-                // Filter to only visible elements so hidden state elements aren't tabbed into
-                const visibleElements = Array.from(focusableElements).filter(el => {
-                    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
-                });
-
-                if (visibleElements.length === 0) {
-                    e.preventDefault();
-                    return;
-                }
-
-                const firstEl = visibleElements[0];
-                const lastEl = visibleElements[visibleElements.length - 1];
-
-                if (e.shiftKey) { // Shift + Tab
-                    if (document.activeElement === firstEl) {
-                        lastEl.focus();
-                        e.preventDefault();
-                    }
-                } else { // Tab
-                    if (document.activeElement === lastEl) {
-                        firstEl.focus();
-                        e.preventDefault();
-                    }
-                }
+        quoteModal.addEventListener('click', (e) => {
+            if (e.target === quoteModal) {
+                closeModal();
             }
+        });
+        
+        // Handle native close event (e.g. if closed via Esc key by browser)
+        quoteModal.addEventListener('cancel', (e) => {
+            e.preventDefault();
+            closeModal();
         });
     }
 

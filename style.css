@@ -155,7 +155,6 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none; /* Hide default cursor */
   transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
               color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -308,7 +307,6 @@ body {
 }
 
 @media (max-width: 768px) {
-  body { cursor: auto; }
   .cursor-ring, .cursor-dot { display: none; }
 }
 
@@ -369,6 +367,9 @@ img {
   display: flex;
   align-items: center;
   gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
@@ -606,6 +607,9 @@ img {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .project-card {
@@ -991,6 +995,21 @@ img {
 }
 
 /* Modal Overlay & Backdrop */
+dialog.modal-overlay {
+  border: none;
+  background: transparent;
+  display: none;
+  max-width: 100%;
+  max-height: 100%;
+  inset: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              display 0.4s allow-discrete;
+}
+
+dialog.modal-overlay[open] {
+  display: flex;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1012,12 +1031,7 @@ img {
   pointer-events: auto;
 }
 
-.modal-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+dialog.modal-overlay::backdrop {
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -1041,6 +1055,16 @@ img {
 
 .modal-overlay.active .modal-card {
   transform: translateY(0) scale(1);
+}
+
+/* @starting-style is standard for animating entry of dialogs */
+@starting-style {
+  dialog.modal-overlay.active {
+    opacity: 0;
+  }
+  dialog.modal-overlay.active .modal-card {
+    transform: translateY(30px) scale(0.95);
+  }
 }
 
 .modal-close-btn {
@@ -1108,6 +1132,12 @@ img {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+fieldset.form-group {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .form-grid {
