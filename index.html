@@ -92,6 +92,7 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
+    <a href="#app" class="skip-link">Skip to Content</a>
     <!-- Premium UI Enhancement Containers -->
     <div class="noise-overlay"></div>
     <div class="cursor-ring"></div>
@@ -119,7 +120,7 @@
             <li><a href="#contact" class="nav-item-link">CONTACT</a></li>
             <li><button id="open-quote-modal" class="quote-cta-btn magnetic-nav">GET A QUOTE</button></li>
             <li><button id="theme-toggle" class="theme-toggle-btn magnetic-nav" aria-label="Toggle Dark/Light Mode" aria-pressed="false">
-              <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="sun-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
                 <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -130,7 +131,7 @@
                 <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
               </svg>
-              <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="moon-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
               </svg>
             </button></li>
@@ -138,7 +139,7 @@
         </div>
       </nav>
     </header>
-    <main id="app">
+    <main id="app" tabindex="-1">
       <section id="home" class="hero">
         <div class="hero-content">
           <h1 class="visually-hidden">MusicPane Media — the best web developer and most affordable social media manager for businesses in Long Island and New York.</h1>
@@ -146,7 +147,7 @@
             <button type="button" class="coin-flip" id="hero-coin" aria-pressed="false" aria-label="Flip the monogram to show Pete's photo">
               <span class="coin-inner">
                 <span class="coin-front wm-preload" id="hero-wordmark" aria-hidden="true"><span class="wm-char">-</span><span class="wm-char">p</span><span class="wm-char">.</span><span class="wm-char">b</span><span class="wm-char">-</span></span>
-                <span class="coin-back"><img src="/images/pb-avatar.jpg" alt="Pete Brancazio" decoding="async"></span>
+                <span class="coin-back"><img src="/images/pb-avatar.jpg" alt="" decoding="async" aria-hidden="true"></span>
               </span>
             </button>
           </div>
@@ -174,54 +175,54 @@
             <li>
               <a href="https://www.bosscrokers.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/boss-crokers-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/boss-crokers-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Boss Croker's</h3>
+                <h3 class="project-title">Boss Croker's<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
             <li>
               <a href="https://squareonehomeinspectors.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/square-one-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/square-one-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Square One</h3>
+                <h3 class="project-title">Square One<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
             <li>
               <a href="https://riobravo1959.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/rio-bravo-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/rio-bravo-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Rio Bravo Tribute</h3>
+                <h3 class="project-title">Rio Bravo Tribute<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
             <li>
               <a href="https://cadprivateinvestigations.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/cad-pi-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/cad-pi-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">CAD Private Investigations</h3>
+                <h3 class="project-title">CAD Private Investigations<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
             <li>
               <a href="https://www.turfkinglawns.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/turf-king-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/turf-king-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Turf King Lawns</h3>
+                <h3 class="project-title">Turf King Lawns<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
             <li>
               <a href="https://neutraloverdrive.com/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="websites">
                 <div class="project-image">
-                  <img src="/images/neutral-overdrive-site.jpg" alt="" class="screenshot-img">
+                  <img src="/images/neutral-overdrive-site.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Neutral Overdrive</h3>
+                <h3 class="project-title">Neutral Overdrive<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">WEBSITE BUILD</p>
               </a>
             </li>
@@ -235,36 +236,36 @@
             <li>
               <a href="https://www.instagram.com/boss_crokers_wantagh/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
                 <div class="project-image">
-                  <img src="/images/boss-crokers-logo.jpg" alt="" class="screenshot-img">
+                  <img src="/images/boss-crokers-logo.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Boss Croker's Wantagh</h3>
+                <h3 class="project-title">Boss Croker's Wantagh<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">INSTAGRAM PAGE</p>
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/squareone_inspectors/" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
                 <div class="project-image">
-                  <img src="/images/square-one-instagram.jpg" alt="" class="screenshot-img">
+                  <img src="/images/square-one-instagram.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Square One Professional Home Inspectors</h3>
+                <h3 class="project-title">Square One Professional Home Inspectors<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">INSTAGRAM PAGE</p>
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/gopalmtrees" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
                 <div class="project-image">
-                  <img src="/images/go-palm-trees-logo.jpg" alt="" class="screenshot-img">
+                  <img src="/images/go-palm-trees-logo.jpg" alt="" class="screenshot-img" aria-hidden="true">
                 </div>
-                <h3 class="project-title">GO Palm Trees</h3>
+                <h3 class="project-title">GO Palm Trees<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">INSTAGRAM PAGE</p>
               </a>
             </li>
             <li>
               <a href="https://www.instagram.com/reliableridesli" target="_blank" rel="noopener noreferrer" class="project-card magnetic-nav" data-type="social">
                 <div class="project-image">
-                  <img src="/images/reliable-rides-logo.jpg" alt="" class="screenshot-img logo-fit">
+                  <img src="/images/reliable-rides-logo.jpg" alt="" class="screenshot-img logo-fit" aria-hidden="true">
                 </div>
-                <h3 class="project-title">Reliable Rides LI</h3>
+                <h3 class="project-title">Reliable Rides LI<span class="visually-hidden"> (opens in a new tab)</span></h3>
                 <p class="project-category">INSTAGRAM PAGE</p>
               </a>
             </li>
@@ -276,7 +277,7 @@
         <div class="about-split">
           <div class="about-left">
             <h2 class="section-title">BIOGRAPHY</h2>
-            <p class="about-text">At MusicPane Media, we believe every business deserves a great online presence without the premium price tag. Based in New York and serving Long Island, we strive to be the best web developer and most affordable social media manager for local brands. As one of the most affordable web developers in Long Island, we specialize in creating clean, functional websites and engaging social media strategies that elevate your brand within your budget.</p>
+            <p class="about-text">Based in Wantagh and serving local brands across Long Island, MusicPane Media delivers high-impact digital solutions that elevate your online presence. We believe every business deserves a stunning, premium website and a dynamic social media strategy. By combining custom web development, graphic design, SEO content strategy, and website accessibility compliance, we craft tailored experiences that drive growth and engage audiences—without the premium agency markup.</p>
           </div>
           <div class="about-right">
             <div class="stat-box">
@@ -320,8 +321,8 @@
       </div>
       <div class="footer">
         <div class="footer-links">
-          <a href="https://www.instagram.com/boss_crokers_wantagh/?hl=en" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
-          <a href="https://www.linkedin.com/in/pbrancazio/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+          <a href="https://www.instagram.com/boss_crokers_wantagh/?hl=en" target="_blank" rel="noopener noreferrer">INSTAGRAM<span class="visually-hidden"> (opens in a new tab)</span></a>
+          <a href="https://www.linkedin.com/in/pbrancazio/" target="_blank" rel="noopener noreferrer">LINKEDIN<span class="visually-hidden"> (opens in a new tab)</span></a>
         </div>
         <div class="footer-copy">
           &copy; 2026 MusicPane Media. All rights reserved.
@@ -405,7 +406,7 @@
 
             <button type="submit" class="submit-quote-btn">
               <span>Send Quote Request</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </form>
         </div>
